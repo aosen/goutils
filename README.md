@@ -2,8 +2,8 @@
 Golang工具箱
 
 * 将Jsonp转化为Json
-JsonpToJson modify jsonp string to json string
-Example: forbar({a:"1",b:2}) to {"a":"1","b":2}
+    JsonpToJson modify jsonp string to json string
+    Example: forbar({a:"1",b:2}) to {"a":"1","b":2}
 ```Golang
 JsonpToJson(json string) string
 ```
