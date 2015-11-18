@@ -73,7 +73,7 @@ func IsFileExists(path string) bool {
 
 //判断字符串是否为数字字符串
 // The IsNum judges string is number or not.
-func IsNum(a string) bool {
+func IsStringNum(a string) bool {
 	reg, _ := regexp.Compile("^\\d+$")
 	return reg.MatchString(a)
 }
