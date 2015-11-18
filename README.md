@@ -30,7 +30,7 @@ IsStringNum(a string) bool
 
 * 将xml转化为map[string]string
 ```Golang
-XML2mapstr(xmldoc string) map[string]string {
+XML2mapstr(xmldoc string) map[string]string
 ```
 
 * 将字符串转化成hash
