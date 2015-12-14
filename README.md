@@ -10,7 +10,7 @@ JsonpToJson(json string) string
 
 - 获取工作路径
 ```Golang
-GetWDPath() string {
+GetWDPath() string
 ```
 
 - 判断目录是否存在
