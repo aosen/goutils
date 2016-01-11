@@ -20,15 +20,15 @@ func PutError(err error) {
 }
 
 type HandleInterface interface {
-	Prepare(w http.ResponseWriter, r *http.Request, g *G)
-	Get(w http.ResponseWriter, r *http.Request, g *G)
-	Put(w http.ResponseWriter, r *http.Request, g *G)
-	Post(w http.ResponseWriter, r *http.Request, g *G)
-	Options(w http.ResponseWriter, r *http.Request, g *G)
-	Head(w http.ResponseWriter, r *http.Request, g *G)
-	Delete(w http.ResponseWriter, r *http.Request, g *G)
-	Connect(w http.ResponseWriter, r *http.Request, g *G)
-	Finish(w http.ResponseWriter, r *http.Request, g *G)
+	Prepare(w http.ResponseWriter, r *http.Request, g *Global)
+	Get(w http.ResponseWriter, r *http.Request, g *Global)
+	Put(w http.ResponseWriter, r *http.Request, g *Global)
+	Post(w http.ResponseWriter, r *http.Request, g *Global)
+	Options(w http.ResponseWriter, r *http.Request, g *Global)
+	Head(w http.ResponseWriter, r *http.Request, g *Global)
+	Delete(w http.ResponseWriter, r *http.Request, g *Global)
+	Connect(w http.ResponseWriter, r *http.Request, g *Global)
+	Finish(w http.ResponseWriter, r *http.Request, g *Global)
 }
 
 /*全局控制对象*/
