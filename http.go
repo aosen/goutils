@@ -34,8 +34,8 @@ type HandleInterface interface {
 
 /*全局控制对象*/
 type Web struct {
-	//settings 配置信息
-	Settings map[string]interface{}
+	//配置信息
+	Settings map[string]string
 }
 
 func NewWeb() *Web {

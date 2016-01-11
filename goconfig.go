@@ -1,5 +1,5 @@
 // Package config provides for parse config file.
-package goconfig
+package utils
 
 import (
 	"errors"
@@ -23,27 +23,27 @@ func NewConfig() *Config {
 }
 
 // Load reads config file and returns an initialized Config.
-func (this *Config) Load(configFile string) *Config {
+func (self *Config) Load(configFile string) *Config {
 	stream, err := ioutil.ReadFile(configFile)
 	if err != nil {
 		panic("config read file error : " + configFile + "\n")
 	}
-	this.LoadString(string(stream))
-	return this
+	self.LoadString(string(stream))
+	return self
 }
 
 // Save writes config content to a config file.
-func (this *Config) Save(configFile string) error {
-	return ioutil.WriteFile(configFile, []byte(this.String()), 0777)
+func (self *Config) Save(configFile string) error {
+	return ioutil.WriteFile(configFile, []byte(self.String()), 0777)
 }
 
-func (this *Config) Clear() {
-	this.globalContent = make(map[string]string)
-	this.sectionContents = make(map[string]map[string]string)
-	this.sections = nil
+func (self *Config) Clear() {
+	self.globalContent = make(map[string]string)
+	self.sectionContents = make(map[string]map[string]string)
+	self.sections = nil
 }
 
-func (this *Config) LoadString(s string) error {
+func (self *Config) LoadString(s string) error {
 	lines := strings.Split(s, "\n")
 	section := ""
 	for _, line := range lines {
@@ -55,14 +55,14 @@ func (this *Config) LoadString(s string) error {
 			if lineLen := len(line); line[lineLen-1] == ']' {
 				section = line[1 : lineLen-1]
 				sectionAdded := false
-				for _, oldSection := range this.sections {
+				for _, oldSection := range self.sections {
 					if section == oldSection {
 						sectionAdded = true
 						break
 					}
 				}
 				if !sectionAdded {
-					this.sections = append(this.sections, section)
+					self.sections = append(self.sections, section)
 				}
 				continue
 			}
@@ -74,23 +74,23 @@ func (this *Config) LoadString(s string) error {
 		key := strings.Trim(pair[0], emptyRunes)
 		value := strings.Trim(pair[1], emptyRunes)
 		if section == "" {
-			this.globalContent[key] = value
+			self.globalContent[key] = value
 		} else {
-			if _, ok := this.sectionContents[section]; !ok {
-				this.sectionContents[section] = make(map[string]string)
+			if _, ok := self.sectionContents[section]; !ok {
+				self.sectionContents[section] = make(map[string]string)
 			}
-			this.sectionContents[section][key] = value
+			self.sectionContents[section][key] = value
 		}
 	}
 	return nil
 }
 
-func (this *Config) String() string {
+func (self *Config) String() string {
 	s := ""
-	for key, value := range this.globalContent {
+	for key, value := range self.globalContent {
 		s += key + "=" + value + "\n"
 	}
-	for section, content := range this.sectionContents {
+	for section, content := range self.sectionContents {
 		s += "[" + section + "]\n"
 		for key, value := range content {
 			s += key + "=" + value + "\n"
@@ -99,28 +99,28 @@ func (this *Config) String() string {
 	return s
 }
 
-func (this *Config) StringWithMeta() string {
-	s := "__sections__=" + strings.Join(this.sections, ",") + "\n"
-	return s + this.String()
+func (self *Config) StringWithMeta() string {
+	s := "__sections__=" + strings.Join(self.sections, ",") + "\n"
+	return s + self.String()
 }
 
-func (this *Config) GlobalHas(key string) bool {
-	if _, ok := this.globalContent[key]; ok {
+func (self *Config) GlobalHas(key string) bool {
+	if _, ok := self.globalContent[key]; ok {
 		return true
 	}
 	return false
 }
 
-func (this *Config) GlobalGet(key string) string {
-	return this.globalContent[key]
+func (self *Config) GlobalGet(key string) string {
+	return self.globalContent[key]
 }
 
-func (this *Config) GlobalSet(key string, value string) {
-	this.globalContent[key] = value
+func (self *Config) GlobalSet(key string, value string) {
+	self.globalContent[key] = value
 }
 
-func (this *Config) GlobalGetInt(key string) int {
-	value := this.GlobalGet(key)
+func (self *Config) GlobalGetInt(key string) int {
+	value := self.GlobalGet(key)
 	if value == "" {
 		return 0
 	}
@@ -131,8 +131,8 @@ func (this *Config) GlobalGetInt(key string) int {
 	return result
 }
 
-func (this *Config) GlobalGetInt64(key string) int64 {
-	value := this.GlobalGet(key)
+func (self *Config) GlobalGetInt64(key string) int64 {
+	value := self.GlobalGet(key)
 	if value == "" {
 		return 0
 	}
@@ -143,17 +143,17 @@ func (this *Config) GlobalGetInt64(key string) int64 {
 	return result
 }
 
-func (this *Config) GlobalGetDuration(key string) time.Duration {
-	return time.Duration(this.GlobalGetInt(key)) * time.Second
+func (self *Config) GlobalGetDuration(key string) time.Duration {
+	return time.Duration(self.GlobalGetInt(key)) * time.Second
 }
 
-func (this *Config) GlobalGetDeadline(key string) time.Time {
-	return time.Now().Add(time.Duration(this.GlobalGetInt(key)) * time.Second)
+func (self *Config) GlobalGetDeadline(key string) time.Time {
+	return time.Now().Add(time.Duration(self.GlobalGetInt(key)) * time.Second)
 }
 
-func (this *Config) GlobalGetSlice(key string, separator string) []string {
+func (self *Config) GlobalGetSlice(key string, separator string) []string {
 	result := []string{}
-	value := this.GlobalGet(key)
+	value := self.GlobalGet(key)
 	if value != "" {
 		for _, part := range strings.Split(value, separator) {
 			result = append(result, strings.Trim(part, emptyRunes))
@@ -162,9 +162,9 @@ func (this *Config) GlobalGetSlice(key string, separator string) []string {
 	return result
 }
 
-func (this *Config) GlobalGetSliceInt(key string, separator string) []int {
+func (self *Config) GlobalGetSliceInt(key string, separator string) []int {
 	result := []int{}
-	value := this.GlobalGetSlice(key, separator)
+	value := self.GlobalGetSlice(key, separator)
 	for _, part := range value {
 		int, err := strconv.Atoi(part)
 		if err != nil {
@@ -175,50 +175,50 @@ func (this *Config) GlobalGetSliceInt(key string, separator string) []int {
 	return result
 }
 
-func (this *Config) GlobalContent() map[string]string {
-	return this.globalContent
+func (self *Config) GlobalContent() map[string]string {
+	return self.globalContent
 }
 
-func (this *Config) Sections() []string {
-	return this.sections
+func (self *Config) Sections() []string {
+	return self.sections
 }
 
-func (this *Config) HasSection(section string) bool {
-	if _, ok := this.sectionContents[section]; ok {
+func (self *Config) HasSection(section string) bool {
+	if _, ok := self.sectionContents[section]; ok {
 		return true
 	}
 	return false
 }
 
-func (this *Config) SectionHas(section string, key string) bool {
-	if !this.HasSection(section) {
+func (self *Config) SectionHas(section string, key string) bool {
+	if !self.HasSection(section) {
 		return false
 	}
-	if _, ok := this.sectionContents[section][key]; ok {
+	if _, ok := self.sectionContents[section][key]; ok {
 		return true
 	}
 	return false
 }
 
-func (this *Config) SectionGet(section string, key string) string {
-	if content, ok := this.sectionContents[section]; ok {
+func (self *Config) SectionGet(section string, key string) string {
+	if content, ok := self.sectionContents[section]; ok {
 		return content[key]
 	}
 	return ""
 }
 
-func (this *Config) SectionSet(section string, key string, value string) {
-	if content, ok := this.sectionContents[section]; ok {
+func (self *Config) SectionSet(section string, key string, value string) {
+	if content, ok := self.sectionContents[section]; ok {
 		content[key] = value
 	} else {
 		content = make(map[string]string)
 		content[key] = value
-		this.sectionContents[section] = content
+		self.sectionContents[section] = content
 	}
 }
 
-func (this *Config) SectionGetInt(section string, key string) int {
-	value := this.SectionGet(section, key)
+func (self *Config) SectionGetInt(section string, key string) int {
+	value := self.SectionGet(section, key)
 	if value == "" {
 		return 0
 	}
@@ -229,13 +229,13 @@ func (this *Config) SectionGetInt(section string, key string) int {
 	return result
 }
 
-func (this *Config) SectionGetDuration(section string, key string) time.Duration {
-	return time.Duration(this.SectionGetInt(section, key)) * time.Second
+func (self *Config) SectionGetDuration(section string, key string) time.Duration {
+	return time.Duration(self.SectionGetInt(section, key)) * time.Second
 }
 
-func (this *Config) SectionGetSlice(section string, key string, separator string) []string {
+func (self *Config) SectionGetSlice(section string, key string, separator string) []string {
 	result := []string{}
-	value := this.SectionGet(section, key)
+	value := self.SectionGet(section, key)
 	if value != "" {
 		for _, part := range strings.Split(value, separator) {
 			result = append(result, strings.Trim(part, emptyRunes))
@@ -244,12 +244,12 @@ func (this *Config) SectionGetSlice(section string, key string, separator string
 	return result
 }
 
-func (this *Config) SectionContent(section string) map[string]string {
-	return this.sectionContents[section]
+func (self *Config) SectionContent(section string) map[string]string {
+	return self.sectionContents[section]
 }
 
-func (this *Config) SectionContents() map[string]map[string]string {
-	return this.sectionContents
+func (self *Config) SectionContents() map[string]map[string]string {
+	return self.sectionContents
 }
 
 const emptyRunes = " \r\t\v"
