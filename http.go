@@ -32,12 +32,16 @@ type HandleInterface interface {
 }
 
 /*全局控制对象*/
-type Global struct {
+type Web struct {
 	//settings 配置信息
 	Settings map[string]interface{}
 }
 
-func (self *Global) Go(handler HandleInterface) http.HandlerFunc {
+func NewWeb() *Web {
+	return &Web{}
+}
+
+func (self *Web) Go(handler HandleInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//为了保证程序不会异常退出，增加recover
 		debug, err := GetSetting(self.Settings, "DEBUG")
@@ -74,41 +78,41 @@ func (self *Global) Go(handler HandleInterface) http.HandlerFunc {
 }
 
 //所有http处理类都继承此类
-type Web struct {
+type BaseHandle struct {
 }
 
-func (self *Web) Prepare(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Prepare(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Get(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Get(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Put(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Put(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Post(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Post(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Options(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Options(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Head(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Head(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Delete(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Delete(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Connect(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Connect(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
 
-func (self *Web) Finish(w http.ResponseWriter, r *http.Request, g *G) {
+func (self *BaseHandle) Finish(w http.ResponseWriter, r *http.Request, g *G) {
 	fmt.Fprintln(w, "sorry 404 not found")
 }
