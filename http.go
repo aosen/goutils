@@ -9,7 +9,7 @@ Desc: http中间件，采用接口思想，restfull，开发者只要继承基�
 package utils
 
 import (
-	"fmt"
+	"errors"
 	"log"
 	"net/http"
 )
@@ -38,15 +38,19 @@ type Web struct {
 	Settings map[string]string
 }
 
-func NewWeb() *Web {
-	return &Web{}
+func NewWeb(setting map[string]string) *Web {
+	return &Web{
+		Settings: setting,
+	}
 }
 
 func (self *Web) Go(handler HandleInterface) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		//为了保证程序不会异常退出，增加recover
-		debug, err := GetSetting(self.Settings, "DEBUG")
-		PutError(err)
+		debug, ok := GetSetting(self.Settings, "DEBUG")
+		if !ok {
+			PutError(errors.New("not found setting for debug"))
+		}
 		if debug != "True" {
 			defer func() {
 				if x := recover(); x != nil {
@@ -79,41 +83,52 @@ func (self *Web) Go(handler HandleInterface) http.HandlerFunc {
 }
 
 //所有http处理类都继承此类
-type BaseHandle struct {
+type WebHandler struct {
 }
 
-func (self *BaseHandle) Prepare(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Prepare(w http.ResponseWriter, r *http.Request, web *Web) {
 }
 
-func (self *BaseHandle) Get(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Get(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Put(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Put(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Post(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Post(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Options(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Options(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Head(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Head(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Delete(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Delete(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Connect(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Connect(w http.ResponseWriter, r *http.Request, web *Web) {
+	w.WriteHeader(404)
+	w.Write([]byte("404 not found"))
 }
 
-func (self *BaseHandle) Finish(w http.ResponseWriter, r *http.Request, g *G) {
-	fmt.Fprintln(w, "sorry 404 not found")
+func (self *WebHandler) Finish(w http.ResponseWriter, r *http.Request, web *Web) {
+}
+
+//获取配置文件信息
+func GetSetting(settings map[string]string, key string) (string, bool) {
+	value, ok := settings[key]
+	return value, ok
 }
