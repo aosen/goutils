@@ -68,8 +68,8 @@ func (self *Global) Go(handler HandleInterface) http.HandlerFunc {
 		case "CONNECT":
 			handler.Connect(w, r, self)
 		}
-		handler.Finish(w, r, self)
 		//无论什么方法 结束后都调用finish方法
+		handler.Finish(w, r, self)
 	}
 }
 
