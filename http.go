@@ -3,6 +3,7 @@ Author: Aosen
 Data: 2016-01-11
 QQ: 316052486
 Desc: http中间件，采用接口思想，restfull，开发者只要继承基类，即可处理http请求
+举个例子：https://github.com/aosen/novel
 */
 
 package utils
