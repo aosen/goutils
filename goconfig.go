@@ -1,5 +1,5 @@
 // Package config provides for parse config file.
-package utils
+package goutils
 
 import (
 	"errors"

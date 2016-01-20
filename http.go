@@ -6,7 +6,7 @@ Desc: http中间件，采用接口思想，restfull，开发者只要继承基�
 举个例子：https://github.com/aosen/novel
 */
 
-package utils
+package goutils
 
 import (
 	"errors"

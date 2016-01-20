@@ -1,4 +1,4 @@
-package utils
+package goutils
 
 /*
 Golang 实现的协程池

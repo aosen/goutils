@@ -1,18 +1,23 @@
-package utils
-
 /*
-一些列Go开发工具箱
+Author: Aosen
+Date: 2016-01-20
+QQ: 316052486
+Desc:
+一系列Go开发工具箱
 */
+
+package goutils
 
 import (
 	"encoding/xml"
 	"fmt"
-	"golang.org/x/net/html/charset"
 	"hash/crc32"
 	"io"
 	"os"
 	"regexp"
 	"strings"
+
+	"golang.org/x/net/html/charset"
 )
 
 //将Jsonp转化为Json
@@ -112,4 +117,21 @@ func MakeHash(s string) string {
 	var IEEETable = crc32.MakeTable(IEEE)
 	hash := fmt.Sprintf("%x", crc32.Checksum([]byte(s), IEEETable))
 	return hash
+}
+
+//获取相对路径中的参数，返回参数字典
+///Book/ShowBookList.aspx?tclassid=3&page=1
+func GetKVInRelaPath(path string) (kv map[string]string) {
+	//获取参数字符串
+	l := strings.Split(path, "?")
+	if len(l) == 2 {
+		kvslist := strings.Split(l[1], "&")
+		for _, el := range kvslist {
+			kvs := strings.Split(el, "=")
+			if len(kvs) == 2 {
+				kv[kvs[0]] = kvs[1]
+			}
+		}
+	}
+	return
 }
