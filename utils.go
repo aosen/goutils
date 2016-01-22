@@ -121,9 +121,10 @@ func MakeHash(s string) string {
 
 //获取相对路径中的参数，返回参数字典
 ///Book/ShowBookList.aspx?tclassid=3&page=1
-func GetKVInRelaPath(path string) (kv map[string]string) {
+func GetKVInRelaPath(path string) map[string]string {
 	//获取参数字符串
 	l := strings.Split(path, "?")
+	kv := make(map[string]string)
 	if len(l) == 2 {
 		kvslist := strings.Split(l[1], "&")
 		for _, el := range kvslist {
@@ -133,5 +134,5 @@ func GetKVInRelaPath(path string) (kv map[string]string) {
 			}
 		}
 	}
-	return
+	return kv
 }
