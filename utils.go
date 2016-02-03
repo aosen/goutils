@@ -128,7 +128,6 @@ func MakeHash(s string) string {
 //获取绝对路径或相对路径中的参数，返回参数字典
 ///Book/ShowBookList.aspx?tclassid=3&page=1
 func GetKVInRelaPath(path string) map[string]string {
-	kv := make(map[string]string)
 	//获取参数字符串
 	l := strings.Split(path, "?")
 	kv := make(map[string]string)
