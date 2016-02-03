@@ -9,11 +9,17 @@ Desc:
 package goutils
 
 import (
+	"bytes"
+	"crypto/md5"
+	"encoding/gob"
+	"encoding/hex"
 	"encoding/xml"
+	"errors"
 	"fmt"
 	"hash/crc32"
 	"io"
 	"os"
+	"reflect"
 	"regexp"
 	"strings"
 
@@ -119,9 +125,10 @@ func MakeHash(s string) string {
 	return hash
 }
 
-//获取相对路径中的参数，返回参数字典
+//获取绝对路径或相对路径中的参数，返回参数字典
 ///Book/ShowBookList.aspx?tclassid=3&page=1
-func GetKVInRelaPath(path string) (kv map[string]string) {
+func GetKVInRelaPath(path string) map[string]string {
+	kv := make(map[string]string)
 	//获取参数字符串
 	l := strings.Split(path, "?")
 	if len(l) == 2 {
@@ -133,5 +140,44 @@ func GetKVInRelaPath(path string) (kv map[string]string) {
 			}
 		}
 	}
+	return kv
+}
+
+//对象的深度拷贝
+func DeepCopy(dst, src interface{}) error {
+	var buf bytes.Buffer
+	if err := gob.NewEncoder(&buf).Encode(src); err != nil {
+		return err
+	}
+	return gob.NewDecoder(bytes.NewBuffer(buf.Bytes())).Decode(dst)
+}
+
+//判断obj是否在Slice／Array／Map中
+func Contains(obj interface{}, target interface{}) (bool, error) {
+	targetValue := reflect.ValueOf(target)
+	switch reflect.TypeOf(target).Kind() {
+	case reflect.Slice, reflect.Array:
+		for i := 0; i < targetValue.Len(); i++ {
+			if targetValue.Index(i).Interface() == obj {
+				return true, nil
+			}
+		}
+		return false, nil
+	case reflect.Map:
+		if targetValue.MapIndex(reflect.ValueOf(obj)).IsValid() {
+			return true, nil
+		} else {
+			return false, nil
+		}
+	default:
+		return false, errors.New("need slice, array or map")
+	}
+}
+
+//md5加密
+func Md5(str string) (ret string) {
+	h := md5.New()
+	h.Write([]byte(str))
+	ret = hex.EncodeToString(h.Sum(nil))
 	return
 }
