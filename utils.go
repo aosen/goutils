@@ -131,6 +131,7 @@ func GetKVInRelaPath(path string) map[string]string {
 	kv := make(map[string]string)
 	//获取参数字符串
 	l := strings.Split(path, "?")
+	kv := make(map[string]string)
 	if len(l) == 2 {
 		kvslist := strings.Split(l[1], "&")
 		for _, el := range kvslist {
