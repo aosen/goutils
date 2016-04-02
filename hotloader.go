@@ -48,7 +48,7 @@ func (self *HotConf) Load(filename string, fn func(string) (interface{}, error))
     if self.getState() == BUF0 {
         self.buf1 = tmp
         self.setState(BUF1)
-    } else if self.getState() ==else BUF1 {
+    } else if self.getState() == BUF1 {
         self.buf0 = tmp
         self.setState(BUF0)
     }
