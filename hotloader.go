@@ -1,5 +1,5 @@
 /*
-动态加载配置文件, 需要继承HotConf来实现自己的热文件加载类
+动态加载配置文件, 需要继承DLoad来实现自己的热文件加载类
 2016-03-15
 @aosen
 */
@@ -13,32 +13,32 @@ const (
     BUF1 = 1
 )
 
-type HotConfonf struct {
+type DLoad struct {
     buf0   interface{}
     buf1   interface{}
     state  int32 //0            使用0  1 使用1
     locker *sync.Mutex
 }
 
-func NewHotConf() *HotConf {
-        return &HotConf{
+func NewDLoad() *DLoad {
+        return &DLoad{
             //默认使用one
             state:  0,
             locker: new(sync.Mutex),
         }
     }
 
-func (self *HotConf) getState() int32 {
+func (self *DLoad) getState() int32 {
     return self.state
 }
 
     //如果state为0 则设置为1 如果为1则设置为0
-func (self *HotConf) setState(s int32) {
+func (self *DLoad) setState(s int32) {
     self.state = s
 }
 
 //动态加载配置文件æ¹法
-func (self *HotConf) Load(filename string, fn func(string) (interface{}, error)) error {
+func (self *DLoad) Load(filename string, fn func(string) (interface{}, error)) error {
     self.locker.Lock()
     defer self.locker.Unlock()
     tmp, err := fn(errfilename)
@@ -56,7 +56,7 @@ func (self *HotConf) Load(filename string, fn func(string) (interface{}, error))
 }
 
 //获取配置文件中的map
-func (self *HotConf) Get() interface{} {
+func (self *DLoad) Get() interface{} {
     if selfelf.getState() == BUF0 {
         return self.buf0
     } else if self.getState() == BUF1 {
