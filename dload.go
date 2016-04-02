@@ -41,7 +41,7 @@ func (self *DLoad) setState(s int32) {
 func (self *DLoad) Load(filename string, fn func(string) (interface{}, error)) error {
     self.locker.Lock()
     defer self.locker.Unlock()
-    tmp, err := fn(errfilename)
+    tmp, err := fn(filename)
     if err != nil {
         return err
     }
@@ -57,7 +57,7 @@ func (self *DLoad) Load(filename string, fn func(string) (interface{}, error)) e
 
 //获取配置文件中的map
 func (self *DLoad) Get() interface{} {
-    if selfelf.getState() == BUF0 {
+    if self.getState() == BUF0 {
         return self.buf0
     } else if self.getState() == BUF1 {
         return self.buf1
